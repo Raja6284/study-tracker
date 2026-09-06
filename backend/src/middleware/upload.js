@@ -24,9 +24,8 @@ function uploadBuffer(buffer, options) {
   });
 }
 
-// Images are stored as Cloudinary "image" resources (so they can be viewed
-// inline); PDFs and anything else go in as "raw" so Cloudinary stores them
-// without trying to transcode them.
+// Images use Cloudinary's image delivery. PDFs and other files use raw
+// delivery so the original file remains available to the browser.
 async function uploadFilesToCloudinary(files = []) {
   return Promise.all(
     files.map(async (f) => {
