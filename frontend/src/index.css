@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root { height: 100%; }
+
+body {
+  background: #F6F4EE;
+  color: #1F2A24;
+}
+
+.card {
+  background: white;
+  border: 1px solid #DAD5C6;
+  border-radius: 10px;
+}
+
+.btn-primary {
+  background: #2F5D50;
+  color: white;
+  border-radius: 8px;
+  padding: 0.55rem 1.1rem;
+  font-weight: 600;
+  transition: background 0.15s ease;
+}
+.btn-primary:hover { background: #204238; }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-secondary {
+  background: transparent;
+  color: #2F5D50;
+  border: 1px solid #2F5D50;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+}
+.btn-secondary:hover { background: #eef3f1; }
+
+.field-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #556358;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.input {
+  width: 100%;
+  border: 1px solid #DAD5C6;
+  border-radius: 8px;
+  padding: 0.5rem 0.7rem;
+  background: white;
+  font-size: 0.95rem;
+}
+.input:focus {
+  outline: 2px solid #2F5D50;
+  outline-offset: 1px;
+}

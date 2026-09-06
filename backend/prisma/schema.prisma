@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  MENTOR
+}
+
+enum ActivityType {
+  SELF_STUDY
+  LECTURE
+  NOTE_MAKING
+  QUESTION_PRACTICE
+  REVISION
+  READING
+  OTHER
+}
+
+model User {
+  id           String         @id @default(cuid())
+  name         String
+  email        String         @unique
+  passwordHash String
+  role         Role
+  createdAt    DateTime       @default(now())
+
+  studySessions StudySession[] @relation("StudentSessions")
+}
+
+model Subject {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  createdAt DateTime  @default(now())
+
+  topics        Topic[]
+  studySessions StudySession[]
+}
+
+model Topic {
+  id        String   @id @default(cuid())
+  subjectId String
+  name      String
+  createdAt DateTime @default(now())
+
+  subject       Subject        @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  studySessions StudySession[]
+
+  @@unique([subjectId, name])
+}
+
+model StudySession {
+  id                  String       @id @default(cuid())
+  studentId           String
+  date                DateTime // calendar date this session belongs to (no time component used)
+  startTime           DateTime // full timestamp of start
+  endTime             DateTime // full timestamp of end
+  durationMinutes     Int // auto-calculated: endTime - startTime, in minutes
+  subjectId           String
+  topicId             String
+  activityType         ActivityType
+  description         String?
+  questionsAttempted  Int?
+  questionsCorrect    Int?
+  questionsIncorrect  Int?
+  notes               String?
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+
+  student     User         @relation("StudentSessions", fields: [studentId], references: [id], onDelete: Cascade)
+  subject     Subject      @relation(fields: [subjectId], references: [id])
+  topic       Topic        @relation(fields: [topicId], references: [id])
+  attachments Attachment[]
+
+  @@index([studentId, date])
+  @@index([subjectId])
+  @@index([topicId])
+}
+
+model Attachment {
+  id                  String   @id @default(cuid())
+  studySessionId      String
+  cloudinaryPublicId  String
+  secureUrl           String
+  resourceType        String // image | raw | video (cloudinary resource_type)
+  fileType             String // original file extension / mime-derived type
+  originalFilename    String?
+  createdAt           DateTime @default(now())
+
+  studySession StudySession @relation(fields: [studySessionId], references: [id], onDelete: Cascade)
+}
